@@ -28,6 +28,29 @@ app.get('/api/v1/tours', (req, res) => {
     },
   });
 });
+//
+
+//////Get Request with id//////
+app.get('/api/v1/tours/:id', (req, res) => {
+  console.log(req.params);
+  //
+  const id = req.params.id * 1;
+  const tour = tours.find((el) => el.id === id);
+
+  if (!tour) {
+    return res.status(200).json({
+      status: 'fail',
+      message: 'id not found',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
+});
 
 ///POST API////////////
 app.post('/api/v1/tours', (req, res) => {
