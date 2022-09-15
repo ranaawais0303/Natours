@@ -2,16 +2,28 @@ const fs = require('fs');
 const express = require('express');
 
 const app = express();
-////express.json is middleware////
 
+////express.json is middleware////
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log('Hello from middleware');
+  next();
+});
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 /////////functions using api//////
 
 /////////get all tours//////
 const getAllTours = (req, res) => {
+  console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
+    requestedAt: req.requestTime,
+    results: tours.length,
     data: {
       tours,
     },
