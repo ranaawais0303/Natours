@@ -43,6 +43,12 @@ app.get('/api/v1/tours/:id', (req, res) => {
       message: 'id not found',
     });
   }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
 });
 //Patch Request update part of object//
 app.patch('/api/v1/tours/:id', (req, res) => {
@@ -59,12 +65,20 @@ app.patch('/api/v1/tours/:id', (req, res) => {
       tour: '<Updated Tours Here>',
     },
   });
+});
 
-  res.status(200).json({
+/////Delete API////////
+app.delete('/api/v1/tours/:id', (req, res) => {
+  console.log('now');
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'id not found',
+    });
+  }
+  res.status(204).json({
     status: 'success',
-    data: {
-      tour,
-    },
+    data: null,
   });
 });
 
