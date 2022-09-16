@@ -5,7 +5,7 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 
 //1) MIDDLEWARES
-app.use(morgan('dev'));
+app.use(morgan('dev')); //show logging data into console
 ////express.json is middleware////
 app.use(express.json());
 
