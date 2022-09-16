@@ -8,6 +8,7 @@ const app = express();
 app.use(morgan('dev')); //show logging data into console
 ////express.json is middleware////
 app.use(express.json());
+app.use(express.static(`${__dirname}/public`));
 
 ////custom middleware/////
 app.use((req, res, next) => {
