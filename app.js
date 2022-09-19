@@ -4,10 +4,16 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const app = express();
 
+console.log(process.env.NODE_ENV);
 //1) MIDDLEWARES
-app.use(morgan('dev')); //show logging data into console
+if (process.env.NODE_ENV === 'development') {
+  //show logging data into console
+  app.use(morgan('dev'));
+}
+
 ////express.json is middleware////
 app.use(express.json());
+
 app.use(express.static(`${__dirname}/public`));
 
 ////custom middleware/////
