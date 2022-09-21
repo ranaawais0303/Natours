@@ -19,7 +19,8 @@ mongoose
     console.log(con.connections);
   });
 
-////////Schema for our data/////////
+//Create database and collections//////
+//Schema for our data
 const tourSchema = new mongoose.Schema({
   name: {
     type: String,
