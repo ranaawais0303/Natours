@@ -15,8 +15,8 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
   })
-  .then((con) => {
-    console.log(con.connections);
+  .then(() => {
+    console.log('Connection stabled now');
   });
 
 //Create database and collections//////
@@ -42,9 +42,9 @@ const Tour = mongoose.model('Tour', tourSchema);
 
 //document
 const testTour = new Tour({
-  name: 'The Forest Hiker',
-  rating: 4.7,
-  price: 497,
+  name: 'The Park Camper',
+
+  price: 297,
 });
 
 //save testTour
