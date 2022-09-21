@@ -15,7 +15,7 @@ const {
 const router = express.Router();
 //Middleware
 //check id
-router.param('id', checkId);
+// router.param('id', checkId);
 
 ///Routes
 router.route('/').get(getAllTours).post(checkBody, createTour);
