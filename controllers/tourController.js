@@ -3,29 +3,48 @@ const Tour = require(`./../models/tourModel`);
 ////ROUTE HANDLERS
 
 /////////get all tours//////
-exports.getAllTours = (req, res) => {
-  console.log(req.requestTime);
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime,
-    // results: tours.length,
-    // data: {
-    //   tours,
-    // },
-  });
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      data: {
+        status: 'Fail',
+        message: err,
+      },
+    });
+  }
 };
 
 //////////get single tour///
-exports.getTour = (req, res) => {
+exports.getTour = async (req, res) => {
   //
-  const id = req.params.id * 1;
-  // const tour = tours.find((el) => el.id === id);
-  // res.status(200).json({
-  //   status: 'success',
-  //   data: {
-  //     tour,
-  //   },
-  // });
+  try {
+    const tour = await Tour.findById(req.params.id);
+    // Tour.findOne({_id:req.params.id}) same
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      data: {
+        status: 'Fail',
+        message: err,
+      },
+    });
+  }
 };
 
 ////////Create Tour/////
