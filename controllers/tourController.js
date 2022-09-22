@@ -72,15 +72,31 @@ exports.createTour = async (req, res) => {
 };
 
 //////Update Tour//////////////
-exports.updateTour = (req, res) => {
-  console.log('now');
+exports.updateTour = async (req, res) => {
+  try {
+    //new for new value which edit
+    //runValidator for schema which fixed
+    //req.body mean edit body where edit any value
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour: '<Updated Tours Here>',
-    },
-  });
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      data: {
+        status: 'Fail',
+        message: err,
+      },
+    });
+  }
 };
 
 //////////Delete Tour//////////
