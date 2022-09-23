@@ -5,18 +5,28 @@ const Tour = require(`./../models/tourModel`);
 /////////get all tours//////
 exports.getAllTours = async (req, res) => {
   try {
+    console.log(req.query);
     //BUILD QUERY
+    //1)FILTERING
     const queryObj = { ...req.query };
-
     const excludedFieds = ['page', 'sort', 'limit', 'fields'];
-
     excludedFieds.forEach((el) => delete queryObj[el]);
 
-    console.log(req.query, queryObj);
-    // const tours = await Tour.find();
+    //2)ADVANCED FILTERING
+    let queryStr = JSON.stringify(queryObj);
+    //\b for exact /g for all
+    queryStr = queryStr.replace(/\b(gte|gt|lt|lte)\b/g, (match) => `$${match}`);
+    console.log(JSON.parse(queryStr));
 
+    //{difficulty:'easy',duration:{$gte:5}} mongo command
+    //{difficulty:'easy',duration:{gte:5}} req query return
+
+    /////////////////////////////
     //1st way apply query
-    const query = Tour.find(queryObj);
+    const query = Tour.find(JSON.parse(queryStr));
+
+    //EXECUTE THE QUERY
+    const tours = await query;
 
     // 2nd way apply query
     // const query =  Tour.find()
@@ -24,9 +34,6 @@ exports.getAllTours = async (req, res) => {
     //   .equals(5)
     //   .where('difficulty')
     //   .equals('easy');
-
-    //EXECUTE THE QUERY
-    const tours = await query;
 
     //SEND RESPONSE
     res.status(200).json({
@@ -37,6 +44,7 @@ exports.getAllTours = async (req, res) => {
       },
     });
   } catch (err) {
+    console.log(err);
     res.status(404).json({
       data: {
         status: 'Fail',
