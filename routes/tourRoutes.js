@@ -11,6 +11,11 @@ const router = express.Router();
 // router.param('id', checkId);
 
 ///Routes
+router
+  .route('/top-5-cheap')
+  .get(tourController.aliasTopTours, getAllTours)
+  .post(createTour);
+
 router.route('/').get(getAllTours).post(createTour);
 router.route('/:id').get(getTour).patch(updateTour).delete(delelteTour);
 module.exports = router;
