@@ -1,4 +1,5 @@
 const Tour = require(`./../models/tourModel`);
+const APIFeatures = require('./../utils/apiFeatures');
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -12,60 +13,15 @@ exports.aliasTopTours = (req, res, next) => {
 /////////get all tours//////
 exports.getAllTours = async (req, res) => {
   try {
-    console.log(req.query);
-    //BUILD QUERY
-    //1A)FILTERING
-    const queryObj = { ...req.query };
-    const excludedFieds = ['page', 'sort', 'limit', 'fields'];
-    excludedFieds.forEach((el) => delete queryObj[el]);
-
-    //1B)ADVANCED FILTERING
-    let queryStr = JSON.stringify(queryObj);
-    //\b for exact /g for all
-    queryStr = queryStr.replace(/\b(gte|gt|lt|lte)\b/g, (match) => `$${match}`);
-
-    //{difficulty:'easy',duration:{$gte:5}} mongo command
-    //{difficulty:'easy',duration:{gte:5}} req query return
-
-    /////////////////////////////
-    //1st way apply query
-    let query = Tour.find(JSON.parse(queryStr));
-
-    //2)Sorting
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-      //sort('price ratingAverage')
-    } else {
-      //sort by descending order
-      query = query.sort('-createdAt');
-    }
-
-    //3)Field limiting
-
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(' ');
-      //included fields
-      query = query.select(fields);
-    } else {
-      //exclude __v
-      query = query.select('-__v');
-    }
-
-    //4)Pagination
-    const page = req.query.page * 1 || 1;
-    const limit = req.query.limit * 1 || 100;
-    const skip = (page - 1) * limit;
-
-    query = query.skip(skip).limit(limit);
-
-    if (req.query.page) {
-      const numTours = await Tour.countDocuments();
-      if (skip >= numTours) throw new Error('This page does not exist');
-    }
-
     //EXECUTE THE QUERY
-    const tours = await query;
+
+    const features = new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sorting()
+      .limitFields()
+      .paginate();
+
+    const tours = await features.query;
 
     // 2nd way apply query
     // const query =  Tour.find()
