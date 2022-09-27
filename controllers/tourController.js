@@ -143,16 +143,52 @@ exports.delelteTour = async (req, res) => {
   }
 };
 
-///////////////////////////////////////////////
-//check id by middleware
-// exports.checkId = (req, res, next, val) => {
-//   console.log(`Tour id is: ${val}`);
+//////////
+exports.getTourStats = async (req, res) => {
+  try {
+    const stats = await Tour.aggregate([
+      {
+        $match: {
+          ratingsAverage: { $gte: 4.5 },
+        },
+      },
 
-//   if (req.params.id * 1 > tours.length) {
-//     return res.status(404).json({
-//       status: 'fail',
-//       message: 'id not found',
-//     });
-//   }
-//   next();
-// };
+      {
+        $group: {
+          _id: { $toUpper: '$difficulty' },
+          numTours: { $sum: 1 },
+          numRatings: { $sum: '$ratingsQuantity' },
+          avgRating: { $avg: '$ratingsAverage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
+      },
+      {
+        $sort: {
+          avgPrice: 1,
+        },
+      },
+      // {
+      //   $match: {
+      //     _id: {
+      //       $ne: 'EASY',
+      //     },
+      //   },
+      // },
+    ]);
+    res.status(200).json({
+      status: 'success',
+      data: {
+        stats,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      data: {
+        status: 'Fail',
+        message: err,
+      },
+    });
+  }
+};
