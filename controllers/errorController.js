@@ -39,8 +39,6 @@ const sendErrorProd = (err, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-  process.env.NODE_ENV.replace(' ', '');
-
   console.log('start from here');
   console.log('startggggg', process.env.NODE_ENV);
   err.statusCode = err.statusCode || 500;
@@ -49,7 +47,7 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     console.log('development');
     sendErrorDev(err, res);
-  } else if (process.env.NODE_ENV === 'production ') {
+  } else if (process.env.NODE_ENV.trim() === 'production') {
     let error = { ...err };
     if (err.name === 'CastError') error = handleCastErrorDB(error);
     sendErrorProd(error, res);
