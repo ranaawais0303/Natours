@@ -5,6 +5,12 @@ const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}:${err.value}`;
   return new AppError(message, 400);
 };
+
+const handlerDuplicateFieldDB = (err) => {
+  console.log('this is duplication of error');
+  const message = `Duplicate field value:${err.keyValue.name} is Already in use`;
+  return new AppError(message, 400);
+};
 //For development
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
@@ -18,7 +24,6 @@ const sendErrorDev = (err, res) => {
 const sendErrorProd = (err, res) => {
   //Operational,trusted error:send message to client
   if (err.isOperational) {
-    console.log(err.isOperational);
     res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
@@ -49,7 +54,11 @@ module.exports = (err, req, res, next) => {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV.trim() === 'production') {
     let error = { ...err };
+    //for id
     if (err.name === 'CastError') error = handleCastErrorDB(error);
+
+    //for name
+    if (error.code === 11000) error = handlerDuplicateFieldDB(error);
     sendErrorProd(error, res);
   }
 };
