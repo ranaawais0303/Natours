@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -26,14 +27,26 @@ const userSchema = new mongoose.Schema({
   passwordConfirm: {
     type: String,
     required: [true, 'Please confirm your password'],
-    // validate: {
-    //   validator: function (val) {
-    //     //this only points to current doc on NEW document creation
-    //     return val === this.password;
-    //   },
-    //   message: 'Confirm Password ({VALUE}) should be  Equal to  password',
-    // },
+    validate: {
+      validator: function (el) {
+        //this only works on CREATE and SAVE
+        return el === this.password;
+      },
+      message: 'Confirm Password ({VALUE}) should be  Equal to  password',
+    },
   },
+});
+
+//pre save
+userSchema.pre('save', async function (next) {
+  //only run this function if password was actually modified
+  if (!this.isModified('password')) return next();
+
+  //Hash the password with cost of 12
+  this.password = await bcrypt.hash(this.password, 12);
+
+  //delete the password confirm field
+  this.passwordConfirm = undefined;
 });
 
 //User modal
