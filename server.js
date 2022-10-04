@@ -1,6 +1,16 @@
 const mongoose = require('mongoose');
 
 const dotenv = require(`dotenv`);
+
+//this is at top because we may call
+//reference error or un defined
+//variable any time which may not caught
+process.on('uncaughtException', (err) => {
+  console.log('UNCAUGHT EXCEPTION ERROR');
+  console.log('ERROR Name', err.name, 'ERROR Message', err.message);
+  process.exit(1);
+});
+
 dotenv.config({ path: 'config.env' });
 const app = require(`./app`);
 
@@ -27,9 +37,12 @@ const server = app.listen(port, () => {
 
 //unhandled error
 process.on('unhandledRejection', (err) => {
-  console.log('ERROR NAME', err.name, 'ERROR MESSAGE', err.message);
   console.log('UNHANDLER REJECTION ERROR');
+  console.log('ERROR Name', err.name, 'ERROR Message', err.message);
+
   server.close(() => {
     process.exit(1);
   });
 });
+
+// console.log(x);
