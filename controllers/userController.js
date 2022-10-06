@@ -1,15 +1,23 @@
-//2) ROUTE HANDLERS
+const User = require('./../models/userModal');
+const AppError = require('./../utils/appError');
+const catchAsync = require('./../utils/catchAsync');
 
 //GET ALL USERS
-exports.getAllUsers = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
+exports.getAllUsers = catchAsync(async (req, res) => {
+  const users = await User.find();
+
+  //SEND RESPONSE
+  res.status(200).json({
+    status: 'success',
+    results: users.length,
+    data: {
+      users,
+    },
   });
-};
+});
 
 //GET SINGLE USER
-exports.getUser = (req, res) => {
+exports.getUser = async (req, res) => {
   res.status(500).json({
     status: 'error',
     message: 'This route is not yet defined',
