@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
       message: 'Confirm Password ({VALUE}) should be  Equal to  password',
     },
   },
+  passwordChangedAt: Date,
 });
 
 //pre save
@@ -50,11 +51,23 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined;
 });
 
+//instance method check password match
 userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+//change password check
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000);
+
+    //100<200 if false mean not changed if true mean changed
+    return JWTTimestamp < changedTimestamp;
+  }
+  return false;
 };
 
 //User modal
