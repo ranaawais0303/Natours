@@ -6,8 +6,13 @@ const authController = require(`./../controllers/authController`);
 
 const router = express.Router();
 
+//authentication
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
+//Reset/forgot password
+router.post('/forgotPassword', authController.forgotPassword);
+router.patch('/restPassword/:token', authController.resetPassword);
+//
 router
   .route('/')
   .get(userController.getAllUsers)
