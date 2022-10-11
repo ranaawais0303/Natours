@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please confirm your password'],
     validate: {
       validator: function (el) {
-        //this only works on CREATE and SAVE
+        //this only works on CREATE and SAVE not on update etc
         return el === this.password;
       },
       message: 'Confirm Password ({VALUE}) should be  Equal to  password',
