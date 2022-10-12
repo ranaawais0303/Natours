@@ -19,9 +19,22 @@ const signToken = (id) => {
   );
 };
 
+/////////////////////////////////////////
 //Create and send token signin token
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+  if (process.env.NODE_ENV.trim() === 'production') cookieOptions.secure = true;
+
+  res.cookie('jwt', token, cookieOptions);
+
+  //Remove password from output
+  user.password = undefined;
   res.status(statusCode).json({
     status: 'Successs',
     token,
@@ -30,6 +43,8 @@ const createSendToken = (user, statusCode, res) => {
     },
   });
 };
+
+///////////////////////////////////////
 //SignUp User
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
@@ -43,6 +58,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   createSendToken(newUser, 201, res);
 });
 
+////////////////////////////////////////////
 //Login existing user
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -63,6 +79,7 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
+////////////////////////////////////////////
 //protect tour data from unauthorized user
 exports.protect = catchAsync(async (req, res, next) => {
   //1)Getting the token and check out it's there
@@ -104,6 +121,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+//////////////////////////////////////
 //Authorization who can delete tour
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
@@ -117,6 +135,7 @@ exports.restrictTo = (...roles) => {
   };
 };
 
+////////////////////////////////////
 // FORGOT PASSWORD
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   //1) Get user based on posted email
@@ -158,6 +177,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     );
   }
 });
+
+/////////////////////////////////////////////
+//Reset Password
 exports.resetPassword = catchAsync(async (req, res, next) => {
   // 1) Get User based on the token
   hashedToken = crypto
@@ -187,6 +209,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
+//////////////////////////////////////////
 //update password
 exports.updatePassword = catchAsync(async (req, res, next) => {
   // 1) Get user from collection

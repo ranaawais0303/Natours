@@ -11,6 +11,7 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
+////////////////////////////////////////
 //GET ALL USERS
 exports.getAllUsers = catchAsync(async (req, res) => {
   const users = await User.find();
@@ -25,6 +26,7 @@ exports.getAllUsers = catchAsync(async (req, res) => {
   });
 });
 
+/////////////////////////////////////////
 //Update current user
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) Create Error if user posts password data
@@ -52,6 +54,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
+////////////////////////////////////
 //Delete current user his account
 exports.deleteMe = catchAsync(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user.id, { active: false });
@@ -61,6 +64,7 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
+/////////////////////////////////
 //GET SINGLE USER
 exports.getUser = async (req, res) => {
   res.status(500).json({
@@ -69,6 +73,7 @@ exports.getUser = async (req, res) => {
   });
 };
 
+////////////////////////////////////
 //CREATE USER
 exports.createUser = (req, res) => {
   res.status(500).json({
@@ -77,6 +82,7 @@ exports.createUser = (req, res) => {
   });
 };
 
+///////////////////////////////////
 //DELELTE USER
 exports.delelteUser = (req, res) => {
   res.status(500).json({
@@ -85,6 +91,7 @@ exports.delelteUser = (req, res) => {
   });
 };
 
+///////////////////////////////////
 //UPDATE USER
 exports.updateUser = (req, res) => {
   res.status(500).json({

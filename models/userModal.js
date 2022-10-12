@@ -53,6 +53,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+//////////////////////////////////
 //pre save
 userSchema.pre('save', async function (next) {
   //only run this function if password was actually modified
@@ -65,6 +66,7 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined;
 });
 
+////////////////////////////////////
 //for delete or inactive if active false don't show that doc
 //^find mean start with find
 userSchema.pre(/^find/, function (next) {
@@ -74,6 +76,7 @@ userSchema.pre(/^find/, function (next) {
   next();
 });
 
+/////////////////////////////////////
 //instance method check password match
 userSchema.methods.correctPassword = async function (
   candidatePassword,
@@ -82,6 +85,7 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
+//////////////////////////////////////
 //change password check
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
@@ -93,6 +97,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   return false;
 };
 
+/////////////////////////////////////
 //password fogot
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString('hex');
@@ -109,6 +114,7 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
+///////////////////////////////////////
 //password reset update user password change
 userSchema.pre('save', function (next) {
   if (!this.isModified('password') || this.isNew) return next();
