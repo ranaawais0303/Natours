@@ -19,7 +19,10 @@ router.patch(
   authController.protect,
   authController.updatePassword
 );
-//
+
+//Update other data except password
+router.patch('/updateMe', authController.protect, userController.updateMe);
+
 router
   .route('/')
   .get(userController.getAllUsers)

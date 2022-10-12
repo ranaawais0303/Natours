@@ -5,7 +5,6 @@ const User = require('./../models/userModal');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/AppError');
 const sendEmail = require('./../utils/email');
-const { findOne } = require('./../models/userModal');
 
 //from environment variable
 const secret = process.env.JWT_SECRET;
