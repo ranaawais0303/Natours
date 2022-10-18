@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const User = require('./userModal');
+
+// const User = require('./userModal');
 // const validator = require('validator');
-//Create database and collections//////
 
 //Schema for our data
 const tourSchema = new mongoose.Schema(
@@ -109,7 +109,12 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
-    guides: Array,
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
@@ -128,10 +133,10 @@ tourSchema.pre('save', function (next) {
 });
 
 //Embeded user id's and then find user from that id
-tourSchema.pre('save', async function (doc, next) {
-  const guidesPromises = this.guides.map(async (id) => await User.findById(id));
-  this.guides = await Promise.all(guidesPromises);
-});
+// tourSchema.pre('save', async function (doc, next) {
+//   const guidesPromises = this.guides.map(async (id) => await User.findById(id));
+//   this.guides = await Promise.all(guidesPromises);
+// });
 
 //another premiddleware
 // tourSchema.pre('save', function (next) {
