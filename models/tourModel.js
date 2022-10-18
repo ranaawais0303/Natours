@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./userModal');
 // const validator = require('validator');
 //Create database and collections//////
 
@@ -108,6 +109,7 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+    guides: Array,
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
@@ -123,6 +125,12 @@ tourSchema.virtual('durationWeeks').get(function () {
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
+});
+
+//Embeded user id's and then find user from that id
+tourSchema.pre('save', async function (doc, next) {
+  const guidesPromises = this.guides.map(async (id) => await User.findById(id));
+  this.guides = await Promise.all(guidesPromises);
 });
 
 //another premiddleware
