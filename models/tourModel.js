@@ -158,6 +158,15 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
+//populate query middlewarea
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
+  });
+  next();
+});
+
 //post query middleware
 tourSchema.post(/^find/, function (docs, next) {
   console.log(`Query Took $${Date.now() - this.start} millisecond`);
