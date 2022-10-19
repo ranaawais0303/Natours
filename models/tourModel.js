@@ -126,7 +126,14 @@ const tourSchema = new mongoose.Schema(
 ///virtual properties
 tourSchema.virtual('durationWeeks').get(function () {
   if (this.duration / 7 >= 1) return this.duration / 7;
-  else return 0;
+  else return null;
+});
+
+//virtual populate
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
 });
 
 //DOCUMENT MIDDLEWARE:runs before  only run
