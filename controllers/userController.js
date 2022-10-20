@@ -13,7 +13,12 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 ////////////////////////////////////////
-
+//set id of user to get user from new routes
+//middleware
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
 /////////////////////////////////////////
 //Update current user
 exports.updateMe = catchAsync(async (req, res, next) => {
