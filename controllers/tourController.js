@@ -53,35 +53,9 @@ exports.getTour = catchAsync(async (req, res, next) => {
 });
 
 ////////Create Tour/////
-exports.createTour = catchAsync(async (req, res, next) => {
-  const newTour = await Tour.create(req.body);
-
-  res.status(201).json({
-    status: 'success',
-    data: {
-      tour: newTour,
-    },
-  });
-});
-
+exports.createTour = factory.createOne(Tour);
 //////Update Tour//////////////
-exports.updateTour = catchAsync(async (req, res, next) => {
-  //new for new value which edit
-  //runValidator for schema which fixed
-  //req.body mean edit body where edit any value
-
-  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-});
+exports.updateTour = factory.updateOne(Tour);
 
 //////////Delete Tour//////////
 exports.deleteTour = factory.deleteOne(Tour);
