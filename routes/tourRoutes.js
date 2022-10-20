@@ -3,7 +3,7 @@ const authController = require('./../controllers/authController');
 
 const tourController = require(`./../controllers/tourController`);
 const reviewRouter = require('./../routes/reviewRoutes');
-const { getAllTours, getTour, createTour, updateTour, delelteTour } =
+const { getAllTours, getTour, createTour, updateTour, deleteTour } =
   tourController;
 
 const router = express.Router();
@@ -30,7 +30,7 @@ router
   .delete(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide'),
-    delelteTour
+    deleteTour
   );
 
 module.exports = router;
