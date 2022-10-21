@@ -64,6 +64,15 @@ userSchema.pre('save', async function (next) {
 
   //delete the password confirm field
   this.passwordConfirm = undefined;
+  next();
+});
+///////////////////////////////////////
+//password reset update user password change
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
 });
 
 ////////////////////////////////////
@@ -113,15 +122,6 @@ userSchema.methods.createPasswordResetToken = function () {
 
   return resetToken;
 };
-
-///////////////////////////////////////
-//password reset update user password change
-userSchema.pre('save', function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
-
-  this.passwordChangedAt = Date.now() - 1000;
-  next();
-});
 
 //User modal
 const User = mongoose.model('User', userSchema);
