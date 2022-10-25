@@ -22,6 +22,13 @@ router.route('/top-5-cheap').get(tourController.aliasTopTours, getAllTours);
 router.route('/tour-stats').get(tourController.getTourStats);
 router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 
+//GeoSpetial
+router
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .get(tourController.getToursWithin);
+//tours-within?distance=233&center=-40,45&unit=mi
+//tours-/233/center/-40,45/unit/mi
+
 router
   .route('/')
   .get(getAllTours)
