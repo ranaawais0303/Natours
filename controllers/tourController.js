@@ -161,7 +161,7 @@ exports.getDistances = catchAsync(async (req, res, next) => {
           coordinates: [lng * 1, lat * 1],
         },
         distanceField: 'distance',
-        distanceMultiplier: multiplier,
+        distanceMultiplier: multiplier, //which multiply with distance
       },
     },
     {
